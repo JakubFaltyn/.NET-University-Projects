@@ -1,0 +1,38 @@
+﻿@model Contact;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>Edytuj kontakt</h1>
+<form asp-controller="Contact" asp-action="Update" method="post">
+    <div>
+        <label asp-for="Name">Imię</label>
+        <div class="text-danger">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <input class="form-control" type="text" asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="Email">Adres email</label>
+        <div class="text-danger">
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <input class="form-control" type="email" asp-for="Email" />
+    </div>
+    <div>
+        <label asp-for="Birth">Data urodzin</label>
+        <div class="text-danger">
+            <span asp-validation-for="Birth" class="text-danger"></span>
+        </div>
+        <input class="form-control" type="date" asp-for="Birth" />
+    </div>
+    <div>
+        <label asp-for="Phone">Nr telefonu</label>
+        <div class="text-danger">
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+        <input class="form-control" type="tel" asp-for="Phone" />
+    </div>
+    <button class="btn btn-primary mt-3">Zapisz</button>
+</form>
