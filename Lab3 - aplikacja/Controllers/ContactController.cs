@@ -6,8 +6,9 @@ namespace Lab3___aplikacja.Controllers
 {
     public class ContactController : Controller
     {
-        static Dictionary<int, Contact> _contacts = new Dictionary<int, Contact>();
-        
+        static List<Contact> _contacts = new List<Contact>();
+
+
         public IActionResult Index()
         {
             return View(_contacts);
@@ -24,26 +25,27 @@ namespace Lab3___aplikacja.Controllers
         {
             if(ModelState.IsValid)
             {
-                    int id = _contacts.Keys.Count != 0 ? _contacts.Keys.Max() : 0;
+                    int id = _contacts.Count != 0 ? _contacts.Max(c => c.Id) : 0;
                     model.Id = id + 1;
-                    _contacts[model.Id] = model;
+                    _contacts.Add(model);
 
                     return RedirectToAction("Index");
-                }
+            }
             return View();
         }
 
         [HttpGet]
-        public IActionResult Update()
+        public IActionResult Update(int id)
         {
-            if (_contacts.Keys.Contains(id))
+            var contact = _contacts.Find(c => c.Id == id);
+            if (contact != null)
             {
-                return View(_contacts[id]);
+                return View(contact);
             }
             else
             {
                 return NotFound();
-            };
+            }
         }
 
         [HttpPost]
@@ -51,23 +53,50 @@ namespace Lab3___aplikacja.Controllers
         {
             if (ModelState.IsValid)
             {
-                _contacts[model, Index] = model;
+                var existingContact = _contacts.Find(c => c.Id == model.Id);
+                if (existingContact != null)
+                {
+                    // Update the existing contact with the new data
+                    existingContact.Name = model.Name;
+                    existingContact.Email = model.Email;
+                    existingContact.Birth = model.Birth;
+                    existingContact.Phone = model.Phone;
+                    existingContact.Priority = model.Priority;
+
+                    return RedirectToAction("Index");
+                }
+            }
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var contact = _contacts.Find(c => c.Id == id);
+            if (contact != null)
+            {
+                return View(contact);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var contact = _contacts.Find(c => c.Id == id);
+            if (contact != null)
+            {
+                _contacts.Remove(contact);
                 return RedirectToAction("Index");
             }
-            return View();
-
-        }
-
-        [HttpGet]
-        public IActionResult Details()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Delete()
-        {
-            return View();
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
